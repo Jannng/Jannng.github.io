@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="面试,Java基础,">
+  <meta name="keywords" content="算法,字符串,">
 
 
 
@@ -77,18 +77,25 @@
 
 
 
-<meta name="description" content="什么是字节码？​    Java中引入了虚拟机的概念，即在机器和编译程序之前加入了一层抽象的虚拟机器。这台虚拟机器在任何平台上都提供给编译程序一个共同的接口。编译程序只需要面向虚拟机，生成虚拟机能够理解的代码，再由解释器来将虚拟机中的代码转换为特定系统的机器能执行的代码。Java中，这种虚拟机能理解的代码就叫做字节码（即扩展名字为.class的文件）。不同的平台有着不同解释器，但是虚拟机是相同的。">
-<meta name="keywords" content="面试,Java基础">
+<meta name="description" content="Kmp算法是一种查询字符串匹配的算法。比如说，有一个字符串”ABC  CCACAC  BACCACB”，想知道里面是否包含了另一个字符串”CCACB”？ ABC  CCACCA  BACCACB ​           CCACB 1. 先对对比两个字符串的第一个字母。第一个字母，A，C是不匹配的。所以继续向后移动一位。 2. 位移一位以后发现B,C也是不匹配的。所以再位移到和查找的字符串第一个字">
+<meta name="keywords" content="算法,字符串">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java基础（1）">
-<meta property="og:url" content="http://yoursite.com/2019/01/08/Java基础（1）/index.html">
+<meta property="og:title" content="KMP">
+<meta property="og:url" content="http://yoursite.com/2019/02/12/KMP/index.html">
 <meta property="og:site_name" content="Jang">
-<meta property="og:description" content="什么是字节码？​    Java中引入了虚拟机的概念，即在机器和编译程序之前加入了一层抽象的虚拟机器。这台虚拟机器在任何平台上都提供给编译程序一个共同的接口。编译程序只需要面向虚拟机，生成虚拟机能够理解的代码，再由解释器来将虚拟机中的代码转换为特定系统的机器能执行的代码。Java中，这种虚拟机能理解的代码就叫做字节码（即扩展名字为.class的文件）。不同的平台有着不同解释器，但是虚拟机是相同的。">
+<meta property="og:description" content="Kmp算法是一种查询字符串匹配的算法。比如说，有一个字符串”ABC  CCACAC  BACCACB”，想知道里面是否包含了另一个字符串”CCACB”？ ABC  CCACCA  BACCACB ​           CCACB 1. 先对对比两个字符串的第一个字母。第一个字母，A，C是不匹配的。所以继续向后移动一位。 2. 位移一位以后发现B,C也是不匹配的。所以再位移到和查找的字符串第一个字">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-08T14:17:59.258Z">
+<meta property="og:image" content="http://yoursite.com/2019/02/12/KMP/1141.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/12/KMP/1142.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/12/KMP/1140.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/12/KMP/1148.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/12/KMP/1152.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/12/KMP/1148.jpg">
+<meta property="og:updated_time" content="2019-02-12T04:56:09.508Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java基础（1）">
-<meta name="twitter:description" content="什么是字节码？​    Java中引入了虚拟机的概念，即在机器和编译程序之前加入了一层抽象的虚拟机器。这台虚拟机器在任何平台上都提供给编译程序一个共同的接口。编译程序只需要面向虚拟机，生成虚拟机能够理解的代码，再由解释器来将虚拟机中的代码转换为特定系统的机器能执行的代码。Java中，这种虚拟机能理解的代码就叫做字节码（即扩展名字为.class的文件）。不同的平台有着不同解释器，但是虚拟机是相同的。">
+<meta name="twitter:title" content="KMP">
+<meta name="twitter:description" content="Kmp算法是一种查询字符串匹配的算法。比如说，有一个字符串”ABC  CCACAC  BACCACB”，想知道里面是否包含了另一个字符串”CCACB”？ ABC  CCACCA  BACCACB ​           CCACB 1. 先对对比两个字符串的第一个字母。第一个字母，A，C是不匹配的。所以继续向后移动一位。 2. 位移一位以后发现B,C也是不匹配的。所以再位移到和查找的字符串第一个字">
+<meta name="twitter:image" content="http://yoursite.com/2019/02/12/KMP/1141.jpg">
 
 
 
@@ -118,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/08/Java基础（1）/">
+  <link rel="canonical" href="http://yoursite.com/2019/02/12/KMP/">
 
 
 
 
 
-  <title>Java基础（1） | Jang</title>
+  <title>KMP | Jang</title>
   
 
 
@@ -251,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/08/Java基础（1）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/12/KMP/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jang">
@@ -268,7 +275,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java基础（1）</h1>
+          <h1 class="post-title" itemprop="name headline">KMP</h1>
         
 
         <div class="post-meta">
@@ -280,8 +287,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T21:24:00+08:00">
-                2019-01-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-12T11:12:02+08:00">
+                2019-02-12
               </time>
             
 
@@ -340,17 +347,55 @@
       
 
       
-        <h2 id="什么是字节码？"><a href="#什么是字节码？" class="headerlink" title="什么是字节码？"></a>什么是字节码？</h2><p>​    Java中引入了虚拟机的概念，即在机器和编译程序之前加入了一层抽象的虚拟机器。这台虚拟机器在任何平台上都提供给编译程序一个共同的接口。编译程序只需要面向虚拟机，生成虚拟机能够理解的代码，再由解释器来将虚拟机中的代码转换为特定系统的机器能执行的代码。<strong>Java中，这种虚拟机能理解的代码就叫做字节码（即扩展名字为.class的文件）</strong>。不同的平台有着不同解释器，但是虚拟机是相同的。Java的源程序经过编译器编译后编程字节码，字节码有虚拟机解释执行，虚拟机将每一条要执行的字节码发送给解释器，解释器将其翻译为特定机器上的机器码执行。</p>
-<p>​    Java源代码–&gt;编译器–&gt;jvm可执行的Java字节码–&gt;jvm–&gt;jvm中的解释器–&gt;特定机器可以执行的二进制机器码。</p>
-<h2 id="采用字节码的最大好处是什么"><a href="#采用字节码的最大好处是什么" class="headerlink" title="采用字节码的最大好处是什么?"></a>采用字节码的最大好处是什么?</h2><p>​    Java通过使用字节码的方式，在一定程度上解决了传统解释型语言执行效率低的问题，同时又保留了解释型语言可移植的特点。而且，字节码不转移对一种特定的机器，所以Java程序无需重新编译就可以在多种不同的机器上运行。</p>
-<h2 id="什么是Java虚拟机？"><a href="#什么是Java虚拟机？" class="headerlink" title="什么是Java虚拟机？"></a>什么是Java虚拟机？</h2><p>​    任何一种能够运行Java字节码的软件都可以看成是Java的虚拟机(jvm)</p>
-<h2 id="什么是Java程序的主类？应用程序和小程序的主类有什么不同？"><a href="#什么是Java程序的主类？应用程序和小程序的主类有什么不同？" class="headerlink" title="什么是Java程序的主类？应用程序和小程序的主类有什么不同？"></a>什么是Java程序的主类？应用程序和小程序的主类有什么不同？</h2><p>​    一个程序中可以有多个类，但只有一个主类。在Java应用程序中，主类指的是包含main（）方法的类。在Java小程序中，这个主类是一个继承自系统类Japplet或者Applet的子类。应用程序中主类不一定要求是public的，但是Java小程序中必须要求主类是public的。主类是Java程序执行的入口。</p>
-<h2 id="什么是JDK？什么是JRE？"><a href="#什么是JDK？什么是JRE？" class="headerlink" title="什么是JDK？什么是JRE？"></a>什么是JDK？什么是JRE？</h2><p>​    JDK：是给开发者提供的开发工具箱。除了包括完整的JRE（Java runtime environment），Java运行环境，还包括了其他供开发者使用的工具包。</p>
-<p>​    JRE：普通用户就只用安装JRE来运行Java程序。而程序开发者必须安装JDK来编译调试程序。</p>
-<h2 id="接口和抽象类的区别是什么？"><a href="#接口和抽象类的区别是什么？" class="headerlink" title="接口和抽象类的区别是什么？"></a>接口和抽象类的区别是什么？</h2><p>​    1.接口中所有的方法都是默认public的，所有方法在接口中都不能有实现，抽象类可以有非抽象的方法</p>
-<p>​    2.接口中的实例变量默认是final的，抽象类中不一定。</p>
-<p>​    3.一个类可以实现多个接口，但只能实现一个抽象方法。</p>
-<p>​    4.一个类在实现接口时必须实现接口中所有的方法，而在实现抽象类时不一定。</p>
+        <h1 id="Kmp算法是一种查询字符串匹配的算法。"><a href="#Kmp算法是一种查询字符串匹配的算法。" class="headerlink" title="Kmp算法是一种查询字符串匹配的算法。"></a>Kmp算法是一种查询字符串匹配的算法。</h1><p>比如说，有一个字符串”ABC  CCACAC  BACCACB”，想知道里面是否包含了另一个字符串”CCACB”？</p>
+<p>ABC  CCACCA  BACCACB</p>
+<p>​           CCACB</p>
+<h2 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h2><p><img src="/2019/02/12/KMP/1141.jpg" alt="test"></p>
+<p>先对对比两个字符串的第一个字母。第一个字母，A，C是不匹配的。所以继续向后移动一位。</p>
+<h2 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h2><p><img src="/2019/02/12/KMP/1142.jpg" alt="1127"></p>
+<p>位移一位以后发现B,C也是不匹配的。所以再位移到和查找的字符串第一个字母匹配的地方。</p>
+<h2 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h2><p><img src="/2019/02/12/KMP/1140.jpg" alt="1137"></p>
+<p>位移到与查找字符串第一个字母匹配的地方。接着再位移依次比较。</p>
+<h2 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h2><p><img src="/2019/02/12/KMP/1148.jpg" alt="1148"></p>
+<p>直到出现有一个字母和搜索的字符不相同。</p>
+<h2 id="5"><a href="#5" class="headerlink" title="5."></a>5.</h2><p><img src="/2019/02/12/KMP/1152.jpg" alt="1152"></p>
+<p>这个时候，最容易想到的是，将整个查找词整个后移动一位，再从头比较，这样是可行的，但是效率过低。因为要把搜索查找过的词语再查找一次。</p>
+<h2 id="6"><a href="#6" class="headerlink" title="6."></a>6.</h2><p>当比较到C，B不匹配的时候，其是知道前面的“CCAC”是匹配的，KMP算法的想法就是，利用这个已知信息，不把搜索的位置移动回到已经比较过的位置，这样就提高了效率。</p>
+<p>这里就引入一个部分匹配的表：</p>
+<p>首先，了解两个概念：</p>
+<p>“前缀”：指除了最后一个字符串以外，一个字符串的全部头部组合。</p>
+<p>”后缀“：指除了第一个字符以外，一个字符串的全部尾部组合。</p>
+<p>以“CCACB”为例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- “C”的前缀和后缀都是空集，共有的元素是0</span><br><span class="line">- “CC”的前缀是[C]，后缀是[C],共有元素是1</span><br><span class="line">- “CCA”的前缀是[C,CC]，后缀是[C,CA],共元素是1</span><br><span class="line">- “CCAC”的前缀是[C,CC,CCA],后缀是[C,CA,CAC],共有元素是1</span><br><span class="line">- “CCACB”的前缀是[C,CC,CCA,CCAC],后缀是[C,CA,CAC,CACB],共有元素是1</span><br></pre></td></tr></table></figure>
+<p>这样的得到部分匹配表：</p>
+<table>
+<thead>
+<tr>
+<th>搜索词</th>
+<th>C</th>
+<th>C</th>
+<th>A</th>
+<th>C</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>部分匹配值</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h2><p><img src="/2019/02/12/KMP/1148.jpg" alt=""></p>
+<p>在比较到C，B不匹配的时候。查询匹配表，可知最后一个匹配的字符“C”对应的部分匹配值是1。按照下面的公式计算出移动的位数：</p>
+<p>​            </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">移动位数 = 已匹配的字符数 - 对挺的部分匹配值</span><br></pre></td></tr></table></figure>
+<p>所以移动的位数是 4 - 1 = 3。</p>
+<h2 id="8"><a href="#8" class="headerlink" title="8."></a>8.</h2><p>这样一直匹配就可以得到是否包含了这个字符串。</p>
 
       
     </div>
@@ -368,9 +413,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/面试/" rel="tag"># 面试</a>
+            <a href="/tags/算法/" rel="tag"># 算法</a>
           
-            <a href="/tags/Java基础/" rel="tag"># Java基础</a>
+            <a href="/tags/字符串/" rel="tag"># 字符串</a>
           
         </div>
       
@@ -383,8 +428,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/06/markdown语法/" rel="next" title="markdown语法">
-                <i class="fa fa-chevron-left"></i> markdown语法
+              <a href="/2019/01/08/Java基础（1）/" rel="next" title="Java基础（1）">
+                <i class="fa fa-chevron-left"></i> Java基础（1）
               </a>
             
           </div>
@@ -392,10 +437,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/02/12/KMP/" rel="prev" title="KMP">
-                KMP <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -527,7 +568,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是字节码？"><span class="nav-number">1.</span> <span class="nav-text">什么是字节码？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#采用字节码的最大好处是什么"><span class="nav-number">2.</span> <span class="nav-text">采用字节码的最大好处是什么?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java虚拟机？"><span class="nav-number">3.</span> <span class="nav-text">什么是Java虚拟机？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java程序的主类？应用程序和小程序的主类有什么不同？"><span class="nav-number">4.</span> <span class="nav-text">什么是Java程序的主类？应用程序和小程序的主类有什么不同？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是JDK？什么是JRE？"><span class="nav-number">5.</span> <span class="nav-text">什么是JDK？什么是JRE？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口和抽象类的区别是什么？"><span class="nav-number">6.</span> <span class="nav-text">接口和抽象类的区别是什么？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kmp算法是一种查询字符串匹配的算法。"><span class="nav-number">1.</span> <span class="nav-text">Kmp算法是一种查询字符串匹配的算法。</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1"><span class="nav-number">1.1.</span> <span class="nav-text">1.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-number">1.2.</span> <span class="nav-text">2.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-number">1.3.</span> <span class="nav-text">3.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4"><span class="nav-number">1.4.</span> <span class="nav-text">4.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5"><span class="nav-number">1.5.</span> <span class="nav-text">5.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6"><span class="nav-number">1.6.</span> <span class="nav-text">6.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7"><span class="nav-number">1.7.</span> <span class="nav-text">7.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8"><span class="nav-number">1.8.</span> <span class="nav-text">8.</span></a></li></ol></li></ol></div>
             
 
           </div>
