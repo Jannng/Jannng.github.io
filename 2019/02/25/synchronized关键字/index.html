@@ -85,14 +85,14 @@
 <meta property="og:site_name" content="Jang">
 <meta property="og:description" content="Synchronized关键简介Java并发编程中，Synchronized关键字是一种避免多线程同时操作对象中实例变量出现线程安全的方法。 Synchronized取得的锁都是对象锁，而不是把一段代码或者方法当做锁。 多个对象多个锁HasNum.java 12345678910111213141516171819public class HasNum &amp;#123;    private int">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2019/02/25/synchronized关键字/Synchronized关键字/1736.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/02/25/synchronized关键字/Synchronized关键字/1746.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/25/synchronized关键字/1736.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/02/25/synchronized关键字/1746.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/02/25/synchronized关键字/2135.jpg">
-<meta property="og:updated_time" content="2019-02-25T13:36:59.124Z">
+<meta property="og:updated_time" content="2019-02-25T14:02:30.777Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="synchronized关键字">
 <meta name="twitter:description" content="Synchronized关键简介Java并发编程中，Synchronized关键字是一种避免多线程同时操作对象中实例变量出现线程安全的方法。 Synchronized取得的锁都是对象锁，而不是把一段代码或者方法当做锁。 多个对象多个锁HasNum.java 12345678910111213141516171819public class HasNum &amp;#123;    private int">
-<meta name="twitter:image" content="http://yoursite.com/2019/02/25/synchronized关键字/Synchronized关键字/1736.jpg">
+<meta name="twitter:image" content="http://yoursite.com/2019/02/25/synchronized关键字/1736.jpg">
 
 
 
@@ -354,12 +354,12 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadB</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> HasNum hasNum;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ThreadB</span><span class="params">(HasNum hasNum)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.hasNum = hasNum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        hasNum.add(<span class="string">"b"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        HasNum hasNumA = <span class="keyword">new</span> HasNum();</span><br><span class="line">        HasNum hasNumB = <span class="keyword">new</span> HasNum();</span><br><span class="line">        ThreadA threadA = <span class="keyword">new</span> ThreadA(hasNumA);</span><br><span class="line">        ThreadB threadB = <span class="keyword">new</span> ThreadB(hasNumB);</span><br><span class="line">        threadA.start();</span><br><span class="line">        threadB.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
 <p>aset  num = 100要停顿一会才会执行。</p>
-<p><img src="/2019/02/25/synchronized关键字/Synchronized关键字/1736.jpg" alt="1736"></p>
+<p><img src="/2019/02/25/synchronized关键字/1736.jpg" alt="1736"></p>
 <p>上述主方法中创建了两个HasNum对象，<strong>Synchronized取得是对象锁</strong>,，所以产生了两个锁。在ThreadA执行到Thread.sleep(2000)的时候，线程睡眠，所以aset Num = 100 会停顿一会才能执行。</p>
 <p>但是如果把主函数中改为：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        HasNum hasNum = <span class="keyword">new</span> HasNum();</span><br><span class="line">        ThreadA threadA = <span class="keyword">new</span> ThreadA(hasNum);</span><br><span class="line">        threadA.start();</span><br><span class="line">        ThreadB threadB = <span class="keyword">new</span> ThreadB(hasNum);</span><br><span class="line">        threadB.start();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<p><img src="/2019/02/25/synchronized关键字/Synchronized关键字/1746.jpg" alt="1746"></p>
+<p><img src="/2019/02/25/synchronized关键字/1746.jpg" alt="1746"></p>
 <p>这样就是两个线程共用一个对象，在ThreadA取得hasNum对象的时候，ThreadB在ThreadA执行完成以前都不能执行。同样的aset num = 100会等待一段时间执行。</p>
 <h1 id="Synchronized锁重入"><a href="#Synchronized锁重入" class="headerlink" title="Synchronized锁重入"></a>Synchronized锁重入</h1><p><strong>可重入锁</strong>的概念是：自己可以再次获得自己的内部锁。比如所一个线程的方法获得了一个对象的锁，这个时候对象的锁是还没有释放的，此时想要再次获得这个对象的锁还是可以获得的，这就是可重入锁。如果是不可重入锁的话，就会造成死锁。</p>
 <p>Service.java</p>
