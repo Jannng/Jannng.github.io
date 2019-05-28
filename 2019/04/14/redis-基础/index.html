@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="noSlq,缓存,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="redis 简介redis 是非关系型数据库（NoSql）的一种。是使用 key-value 的形式存储数据，常用于 缓存或者需要高速访问的情况. redis 支持 5 种数据类型：  string（字符串） hash（哈希） list（列表） set（集合） zSet（有序集合）  同时 redis 支持 ROB，AOF 两种持久化方式。也支持事务和主从复制。 启动 redis 服务在正确安装了">
+<meta name="keywords" content="noSlq,缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis 基础">
+<meta property="og:url" content="http://yoursite.com/2019/04/14/redis-基础/index.html">
+<meta property="og:site_name" content="Jang">
+<meta property="og:description" content="redis 简介redis 是非关系型数据库（NoSql）的一种。是使用 key-value 的形式存储数据，常用于 缓存或者需要高速访问的情况. redis 支持 5 种数据类型：  string（字符串） hash（哈希） list（列表） set（集合） zSet（有序集合）  同时 redis 支持 ROB，AOF 两种持久化方式。也支持事务和主从复制。 启动 redis 服务在正确安装了">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1423.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1430.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1445.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1501.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1531.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1558.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1615.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1626.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1627.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1630.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/14/redis-基础/1718.jpg">
+<meta property="og:updated_time" content="2019-04-14T09:20:26.592Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis 基础">
+<meta name="twitter:description" content="redis 简介redis 是非关系型数据库（NoSql）的一种。是使用 key-value 的形式存储数据，常用于 缓存或者需要高速访问的情况. redis 支持 5 种数据类型：  string（字符串） hash（哈希） list（列表） set（集合） zSet（有序集合）  同时 redis 支持 ROB，AOF 两种持久化方式。也支持事务和主从复制。 启动 redis 服务在正确安装了">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/14/redis-基础/1423.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/14/redis-基础/">
+
+
+
+
+
+  <title>redis 基础 | Jang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/14/redis-基础/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis 基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-14T14:06:11+08:00">
+                2019-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="redis-简介"><a href="#redis-简介" class="headerlink" title="redis 简介"></a>redis 简介</h1><p>redis 是非关系型数据库（NoSql）的一种。是使用 key-value 的形式存储数据，常用于 <strong>缓存或者需要高速访问的情况</strong>.</p>
+<p>redis 支持 5 种数据类型：</p>
+<ul>
+<li>string（字符串）</li>
+<li>hash（哈希）</li>
+<li>list（列表）</li>
+<li>set（集合）</li>
+<li>zSet（有序集合）</li>
+</ul>
+<p><strong>同时 redis 支持 ROB，AOF 两种持久化方式。也支持事务和主从复制。</strong></p>
+<h1 id="启动-redis-服务"><a href="#启动-redis-服务" class="headerlink" title="启动 redis 服务"></a>启动 redis 服务</h1><p>在正确安装了 redis 以后。进入 bin 目录，修改 redis.conf 文件，将 daemonize 属性改为 true：</p>
+<p><img src="/2019/04/14/redis-基础/1423.jpg" alt="1423"></p>
+<p>通过 redis-server 指定使用哪个配置文件启动 redis 。</p>
+<p>使用 redis-cli -p 指定 redis 服务的端口号。</p>
+<p>再使用 ping 测试连通性。</p>
+<p><img src="/2019/04/14/redis-基础/1430.jpg" alt="1430"></p>
+<h1 id="String"><a href="#String" class="headerlink" title="String"></a>String</h1><p>String 类型，在 redis 中是一个键值对，通过使用。</p>
+<ul>
+<li>set，get 来设置和获取对应 key 的值。</li>
+<li>del 删除对应的值</li>
+<li>keys * 获得所有 key</li>
+<li>expire key second 设置 key 的过期时间，以秒为单位</li>
+<li>TTl key 返回 key 生存的秒数，返回 -1 代表当前 key 不过期</li>
+<li>PERSIST key 设置 key 永不过期</li>
+</ul>
+<p><img src="/2019/04/14/redis-基础/1445.jpg" alt="1445"></p>
+<h1 id="List"><a href="#List" class="headerlink" title="List"></a>List</h1><p>list 相当于是一个队列。</p>
+<ul>
+<li>LPUSH 将一个或多个元素插入到 list 的头部</li>
+<li>RPUSH 将一个或多个元素插入到 list 的尾部</li>
+<li>LPOP 弹出list 头部的一个元素</li>
+<li>LLEN 获取长度</li>
+<li>LREM key count value 删除 list 中一定数目的 value 值</li>
+<li>LRANGE key start stop 从指定位置开始打印列表，输出 0 -1 代表答应所有元素</li>
+</ul>
+<p><img src="/2019/04/14/redis-基础/1501.jpg" alt="1501"></p>
+<h1 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h1><p>redis 中 Hash 也是 key-value，不过 value 中存储的也是一组 key-value。</p>
+<ul>
+<li>HSET ,HGET 存储或得到一个</li>
+<li>HMSET,HMGET 存储或得到多个</li>
+<li>HGETALL 得到 HASH 中所有的键值对</li>
+<li>HKEYS，HVALS 得到所有的键或者值</li>
+</ul>
+<p><img src="/2019/04/14/redis-基础/1531.jpg" alt="1531"></p>
+<h1 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h1><p>类似 list 但是不能添加重复的值。</p>
+<ul>
+<li>SADD，SMENBERS 存储得到值</li>
+<li>SREM 删除 set 中 value</li>
+<li>SCARD 返回 set 的长度</li>
+<li>SMOVE key1 key2 value 将 key1 中的 value 移动到 key2 中</li>
+<li>SPOP 随机出栈一个元素，SRANDMEMBER key Count 随机出栈多个元素</li>
+<li>SDIFF 两个 set 的差集，SINTER 交集，SUNION 并集</li>
+</ul>
+<p><img src="/2019/04/14/redis-基础/1558.jpg" alt="1558"></p>
+<h1 id="ZSet"><a href="#ZSet" class="headerlink" title="ZSet"></a>ZSet</h1><p>ZSet 就是有序集合，在 set 的基础上多了一个 score 来记录当前值的权重，根据权重来排序。</p>
+<ul>
+<li>ZADD，ZRANGE（withscores） 存储得到值，是否带上权重</li>
+<li>ZREVRANGE 反序排列</li>
+<li>ZRANGEBYSCORE Min max 或者指定权重返回的值</li>
+<li>ZRANK 根据 value 获得下标，ZSCORE 根据 value 获得对应的权重</li>
+</ul>
+<p><img src="/2019/04/14/redis-基础/1615.jpg" alt="1615"></p>
+<h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>redis 支持事务，下面是关于事务的命令：</p>
+<ul>
+<li>MULTI：开启事务</li>
+<li>EXEC：结束执行事务</li>
+<li>DISCARD：放弃当前事务</li>
+<li>watch:监控一个 key 的值</li>
+<li>unwatch：放弃对所有 key 的监控</li>
+</ul>
+<p>正确执行事务：</p>
+<p><img src="/2019/04/14/redis-基础/1626.jpg" alt="1626"></p>
+<p><strong>在执行事务的过程中，如果出现一个命令不正确报错，会导致这次事务的所有操作失败回滚。</strong>：</p>
+<p><img src="/2019/04/14/redis-基础/1627.jpg" alt="1627"></p>
+<p><strong>在事务中，如果命令没有错误，但是在执行某条命令出错了，这个命令就不会执行成功，但是其他的命名会照常执行。这就是 redis 对事务的部分支持，不支持事务的回滚。</strong></p>
+<p><img src="/2019/04/14/redis-基础/1630.jpg" alt="1630"></p>
+<p><strong>watch：加上一个乐观锁</strong></p>
+<ul>
+<li>悲观锁：在操作一个数据的时候认为别人也会操作这个数据，所以就锁住操作的对象。并发性差。</li>
+<li>乐观锁：在操作一个数据的时候认为别人不会操作这个数据，不对数据加锁，引入 version 的机制来确保修改的数据不会丢失，每次上传的时候比较自己的 version 和数据真实的 version 。确保修改时候是在最新的数据上修改。</li>
+</ul>
+<p><img src="/2019/04/14/redis-基础/1718.jpg" alt="1718"></p>
+<p>如果在 watch 监控了以后，数据被修改，这次失误就会执行失败，需要重新执行一次事务。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/noSlq/" rel="tag"># noSlq</a>
+          
+            <a href="/tags/缓存/" rel="tag"># 缓存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/03/HashMap/" rel="next" title="HashMap">
+                <i class="fa fa-chevron-left"></i> HashMap
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/15/正则表达式/" rel="prev" title="正则表达式">
+                正则表达式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jang</p>
+              <p class="site-description motion-element" itemprop="description">个人的学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#redis-简介"><span class="nav-number">1.</span> <span class="nav-text">redis 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动-redis-服务"><span class="nav-number">2.</span> <span class="nav-text">启动 redis 服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#String"><span class="nav-number">3.</span> <span class="nav-text">String</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#List"><span class="nav-number">4.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hash"><span class="nav-number">5.</span> <span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Set"><span class="nav-number">6.</span> <span class="nav-text">Set</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ZSet"><span class="nav-number">7.</span> <span class="nav-text">ZSet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事务"><span class="nav-number">8.</span> <span class="nav-text">事务</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
