@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="netty,">
+  <meta name="keywords" content="netty,NIO,">
 
 
 
@@ -78,14 +78,14 @@
 
 
 <meta name="description" content="netty 可以做什么 可以作为 HTTP 服务器 ，类似 TomCat 等。但是 netty 相对于 Spring 等技术更为底层，处理速度也跟快，但是开发时间长。比如 netty 不支持：路由转发。 Socket 开发。底层数据的传输，HTTP 是基于 TCP 的应用层的协议。微服务。 支持长连接的开发，相对于 HTTP 1.0 的无状态和短连接。消息推送，在线聊天，服务端向客户端推送消息。">
-<meta name="keywords" content="netty">
+<meta name="keywords" content="netty,NIO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="netty基础">
 <meta property="og:url" content="http://yoursite.com/2019/05/26/netty基础/index.html">
 <meta property="og:site_name" content="Jang">
 <meta property="og:description" content="netty 可以做什么 可以作为 HTTP 服务器 ，类似 TomCat 等。但是 netty 相对于 Spring 等技术更为底层，处理速度也跟快，但是开发时间长。比如 netty 不支持：路由转发。 Socket 开发。底层数据的传输，HTTP 是基于 TCP 的应用层的协议。微服务。 支持长连接的开发，相对于 HTTP 1.0 的无状态和短连接。消息推送，在线聊天，服务端向客户端推送消息。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-26T14:18:15.977Z">
+<meta property="og:updated_time" content="2019-06-24T04:10:11.599Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="netty基础">
 <meta name="twitter:description" content="netty 可以做什么 可以作为 HTTP 服务器 ，类似 TomCat 等。但是 netty 相对于 Spring 等技术更为底层，处理速度也跟快，但是开发时间长。比如 netty 不支持：路由转发。 Socket 开发。底层数据的传输，HTTP 是基于 TCP 的应用层的协议。微服务。 支持长连接的开发，相对于 HTTP 1.0 的无状态和短连接。消息推送，在线聊天，服务端向客户端推送消息。">
@@ -377,6 +377,21 @@
 <li>Socket 开发。底层数据的传输，HTTP 是基于 TCP 的应用层的协议。微服务。</li>
 <li>支持长连接的开发，相对于 HTTP 1.0 的无状态和短连接。消息推送，在线聊天，服务端向客户端推送消息。</li>
 </ol>
+<h2 id="NIO-与-IO"><a href="#NIO-与-IO" class="headerlink" title="NIO 与 IO"></a>NIO 与 IO</h2><p>Java.io 中 最为重要的一个概念是 <strong>流（Stream）</strong>。一个流要么是输入流，要么是输出流。不可能同时又是输入又是输出。</p>
+<p>在 java.io 中流大致可以分为<strong>节点流和过滤流</strong>。使用 <strong>装饰模式来增强一个节点流的功能。</strong></p>
+<hr>
+<p>Java.nio 中引入了3个核心概念:<strong>selector,Channel和Buffer。</strong>在 Java.nio 中是面向块（block）和缓冲区（buffer）编程的。</p>
+<p>Java中的8种原生类型，除了 <strong>Boolean</strong> 都有各自对应的 buffer 类型，如 IntBuffer，LongBuffer等等。而 nio 中所有数据的读写都是通过 Buffer（由数组实现） 来实现的，Channel 则是可以读取或者写入 Buffer 的一个对象，永远不会出现直接向 Channel 中读写数据。</p>
+<p>NIO 中 Buffer 类又三个 重要的属性，<strong>capacity，limit，position</strong>。</p>
+<ul>
+<li>capacity：代表一个 Buffer 的容量大小，一旦指定以后就不能改变。</li>
+<li>limit：代表 Buffer 中第一个不能读写数据的索引，代表当前索引位置是没有元素的，limit 永远不能大于 capacity。</li>
+<li>position：代表当前读写元素的下一个可读写元素的索引。每次读写元素之后 position 会加一。position 是永远不能大于 limit的。</li>
+</ul>
+<p>由于 Buffer 是支持读写操作的。所以在读写转换的时候需要调用 <code>filp()</code> 方法改变 Buffer 中的属性。在调用前后，capacity 是不会改变的；limit 改变为之前 position 的位置；position 变为 0。</p>
+<p>对于 NIO 的具体使用如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> stattic <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    <span class="comment">//申请 10 大小的 buffer</span></span><br><span class="line">    IntBuffer buffer = IntBuffer.allocate(<span class="number">10</span>);</span><br><span class="line">    <span class="comment">//向 buffer 中写入数据</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; buffer.capacity();i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> random = <span class="keyword">new</span> SecureRandom().nextInt(<span class="number">20</span>);</span><br><span class="line">        buffer.put(random);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//读写转换</span></span><br><span class="line">    buffer.filp();</span><br><span class="line">    <span class="comment">//从 buffer 中读出数据</span></span><br><span class="line">    <span class="keyword">while</span>(buffer.hasRemaining())&#123;</span><br><span class="line">        System.out.println(buffer.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的程序就会输出十个 0 - 20 的随机数。在读写之间通过调用 <code>filp()</code> 方法实现转换。</p>
 
       
     </div>
@@ -395,6 +410,8 @@
         <div class="post-tags">
           
             <a href="/tags/netty/" rel="tag"># netty</a>
+          
+            <a href="/tags/NIO/" rel="tag"># NIO</a>
           
         </div>
       
@@ -496,7 +513,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -518,7 +535,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -551,7 +568,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#netty-可以做什么"><span class="nav-number">1.</span> <span class="nav-text">netty 可以做什么</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#netty-可以做什么"><span class="nav-number">1.</span> <span class="nav-text">netty 可以做什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NIO-与-IO"><span class="nav-number">1.1.</span> <span class="nav-text">NIO 与 IO</span></a></li></ol></li></ol></div>
             
 
           </div>

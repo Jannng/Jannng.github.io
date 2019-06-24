@@ -85,7 +85,7 @@
 <meta property="og:site_name" content="Jang">
 <meta property="og:description" content="lambda 表达式在 Java 中一个方法的参数只能是一个类或者是基本类型，Java 不支持将函数作为方法的参数，也不支持一个方法的返回值是一个函数。在 JavaScript 中可以有一下的代码： 123function addOne(addNum)&amp;#123;    addNum();&amp;#125; 在 Java 8 中新添加的 lambda 表达式中，允许 Java 进行函数式编程。在类似 J">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-30T14:26:02.075Z">
+<meta property="og:updated_time" content="2019-06-16T11:06:39.674Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java8新特性">
 <meta name="twitter:description" content="lambda 表达式在 Java 中一个方法的参数只能是一个类或者是基本类型，Java 不支持将函数作为方法的参数，也不支持一个方法的返回值是一个函数。在 JavaScript 中可以有一下的代码： 123function addOne(addNum)&amp;#123;    addNum();&amp;#125; 在 Java 8 中新添加的 lambda 表达式中，允许 Java 进行函数式编程。在类似 J">
@@ -399,7 +399,7 @@
 <p><strong>而 lambda 表达式的出现，允许 Java 进行行为传递。对于一个方法，将行为作为 ’参数‘ 传递进去。</strong></p>
 <p>对于上面加一的函数，lambda 表达的方法</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> v, Function&lt;Integer,Integer&gt; function)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> function.apply(v);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> res = add(<span class="number">1</span>, v -&gt; v +１)；</span><br></pre></td></tr></table></figure>
-<p>这样通过一个方法，可以实现多个不同的操作，只需要在调用时传入对应的操作。</p>
+<p>这样通过一个方法，可以实现多个不同的操作，只需要在调用时传入对应的操作。提升抽象层次，API 重用性更好，更加的灵活。</p>
 
       
     </div>
@@ -439,6 +439,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/15/List源码/" rel="prev" title="List源码">
+                List源码 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -515,7 +519,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -537,7 +541,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
