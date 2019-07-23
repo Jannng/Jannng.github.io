@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="并发,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从并发编程bug聊起近几年，我们电脑的 CPU，内存和 I/O 设备都在不段的更迭。但是始终这三者之间存在着一个核心的矛盾，这三者之间的速度差异。为了合理的利用 CPU 的高性能，平衡这三者之间的差距，有了一下的解决方法：  CPU 增加缓存，以平衡与内存之间的速度差异。 操作系统增加了进程，线程，以分时复用 CPU，进而均衡 CPU 和 I/O 设备之间的速度差异。 编译层程序优化指令执行的次序">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java并发">
+<meta property="og:url" content="http://yoursite.com/2019/06/26/java并发/index.html">
+<meta property="og:site_name" content="Jang">
+<meta property="og:description" content="从并发编程bug聊起近几年，我们电脑的 CPU，内存和 I/O 设备都在不段的更迭。但是始终这三者之间存在着一个核心的矛盾，这三者之间的速度差异。为了合理的利用 CPU 的高性能，平衡这三者之间的差距，有了一下的解决方法：  CPU 增加缓存，以平衡与内存之间的速度差异。 操作系统增加了进程，线程，以分时复用 CPU，进而均衡 CPU 和 I/O 设备之间的速度差异。 编译层程序优化指令执行的次序">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/java并发/1653.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/java并发/1659.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/java并发/1951.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/java并发/2001.jpg">
+<meta property="og:updated_time" content="2019-06-28T09:38:47.011Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java并发">
+<meta name="twitter:description" content="从并发编程bug聊起近几年，我们电脑的 CPU，内存和 I/O 设备都在不段的更迭。但是始终这三者之间存在着一个核心的矛盾，这三者之间的速度差异。为了合理的利用 CPU 的高性能，平衡这三者之间的差距，有了一下的解决方法：  CPU 增加缓存，以平衡与内存之间的速度差异。 操作系统增加了进程，线程，以分时复用 CPU，进而均衡 CPU 和 I/O 设备之间的速度差异。 编译层程序优化指令执行的次序">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/26/java并发/1653.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/26/java并发/">
+
+
+
+
+
+  <title>java并发 | Jang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/26/java并发/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java并发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-26T16:42:42+08:00">
+                2019-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="从并发编程bug聊起"><a href="#从并发编程bug聊起" class="headerlink" title="从并发编程bug聊起"></a>从并发编程bug聊起</h1><p>近几年，我们电脑的 CPU，内存和 I/O 设备都在不段的更迭。但是始终这三者之间存在着一个核心的矛盾，<strong>这三者之间的速度差异</strong>。为了合理的利用 CPU 的高性能，平衡这三者之间的差距，有了一下的解决方法：</p>
+<ul>
+<li>CPU 增加缓存，以平衡与内存之间的速度差异。</li>
+<li>操作系统增加了进程，线程，以分时复用 CPU，进而均衡 CPU 和 I/O 设备之间的速度差异。</li>
+<li>编译层程序优化指令执行的次序，使得缓存能够得到更加合理的利用。</li>
+</ul>
+<p>而很多并发程序的 Bug 的根源也在这里。</p>
+<h2 id="源头之一：缓存导致的可见性问题"><a href="#源头之一：缓存导致的可见性问题" class="headerlink" title="源头之一：缓存导致的可见性问题"></a>源头之一：缓存导致的可见性问题</h2><p>在单核时代。所有的线程都在一个 CPU 上执行，CPU 缓存和内存的数据一致性很容易解决。所有的线程都操作的是同一个 CPU 的缓存，这对于另一个线程来说是一定可见的。如下图，线程 A 操作了 变量 V 这一操作，线程 B 是可见的。</p>
+<p><img src="/2019/06/26/java并发/1653.jpg" alt="CPU和内存的关系"></p>
+<p><strong>一个线程对共享变量的修改，其他线程能立刻看见，这个称为可见性。</strong></p>
+<p>但是现在，CPU 都是多核，每颗 CPU 都有着自己的缓存，这个时候 CPU 缓存和内存之间的一致性就不是那么好解决的了。每个线程操作在不同的 CPU 缓存上。如下图，线程 A 在自己的 CPU 缓存中修改了共享变量 V。这一操作对于线程 B 而言是不可见的。</p>
+<p><img src="/2019/06/26/java并发/1659.jpg" alt="多核CPU和内存关系"></p>
+<p>下面我们通过一段代码来验证多核场景下可见性的问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Visible01</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> count;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">add10k</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> idx = <span class="number">10000</span>;</span><br><span class="line">        <span class="keyword">while</span> (idx &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            count++;</span><br><span class="line">            idx--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Visible01 visible = <span class="keyword">new</span> Visible01();</span><br><span class="line">        Thread thr1 = <span class="keyword">new</span> Thread(() -&gt; visible.add10k());</span><br><span class="line">        Thread thr2 = <span class="keyword">new</span> Thread(() -&gt; visible.add10k());</span><br><span class="line">        <span class="comment">//启动两个线程</span></span><br><span class="line">        thr1.start();</span><br><span class="line">        thr2.start();</span><br><span class="line">        <span class="comment">//等待两个线程结束</span></span><br><span class="line">        thr1.join();</span><br><span class="line">        thr2.join();</span><br><span class="line">        System.out.println(visible.count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>咋眼看，代码的输出结果应该是 20000 。但是实际上的结果是在 10000 - 20000 之间的随机数。而导致这样的原因就是，假设两个线程时同时启动的，都会将 count = 0 读入到各自的 CPU 缓存中。执行完 count++ 以后，将结果 count = 1 写入到内存中。这样内存中的值就是 1 而不是我们所期待的 2。而之后两个线程都是基于 CPU 缓存中的 count 值来计算，所以导致最后结果小于 20000。</p>
+<p>如果循环 10000 次的 count ++ 改成循环 1 亿次，就会发现就结果时更接近 1 亿而不是 2 亿。导致这样的原因就是两个线程不是同时启动的，有一个时间差。</p>
+<h2 id="源头之二：进程切换带来的原子性问题"><a href="#源头之二：进程切换带来的原子性问题" class="headerlink" title="源头之二：进程切换带来的原子性问题"></a>源头之二：进程切换带来的原子性问题</h2><p>由于 I/O 太慢，操作系统提出的进程线程的概念。操作系统允许某个进程执行一小段时间，例如 50 毫秒，每过 50 毫秒操作系统就会进行一次进程切换，这 50 毫秒的时间我们称为 <strong>时间片。</strong></p>
+<p><img src="/2019/06/26/java并发/1951.jpg" alt="线程切换"></p>
+<p>Java 中并发程序多时基于多线程的，也就会涉及到任务切换。任务切换的时机大多是在时间片结束的时候，而现在的高级语言中的一条语句往往需要多条 CPU 指令来完成。例如 count += 1，至少需要 3 条 CPU 指令。</p>
+<ol>
+<li>首先将 count 从内存加载到 CPU 寄存器</li>
+<li>在寄存器中执行 +1 操作</li>
+<li>将结果写入内存(缓存机制导可能写入的是 CPU 缓存而不是内存)</li>
+</ol>
+<p>任务切换可以发生在<strong>任何一条 CPU 指令执行完,</strong> 而不是高级语言的一条语句。对于上面 3 条 CPU 指令而言，如果线程 A 在指令 1 执行完以后任务切换，线程 A 和 线程 B 按照下图的序列执行，那么我们就会发现两个线程都执行了 Count += 1 的操作，但是得到的结果不是我们期望的 2 ，而是1。</p>
+<p><img src="/2019/06/26/java并发/2001.jpg" alt="非原子操作"></p>
+<p>在我们的潜意识里，Count +=  1 是一个不可分割的操作，是一个原子。</p>
+<p><strong>我们把一个或多个操作在 CPU 执行的过程中不被中断的特征成为原子性。</strong>CPU 能保证的原子操作是 CPU 指令级别的，而不是高级语言中的一条语句。</p>
+<h2 id="源头之三：编译优化以后带来的有序性问题"><a href="#源头之三：编译优化以后带来的有序性问题" class="headerlink" title="源头之三：编译优化以后带来的有序性问题"></a>源头之三：编译优化以后带来的有序性问题</h2><p>有序性指的是程序按照先后顺序执行。但是编译器为了优化性能，有时候会改变程序中语句的先后顺序。</p>
+<p>在 Java 一个经典的列子就是使用双重锁检查创建单例对象，例如下面的代码，在通过 <code>getInstance()</code> 方法获得单例对象的时候，首先判断对象是否为空，如果为空就锁定对象，再判断一次对象是否为空，如果还是为空，就创建一个对象的实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class)&#123;</span><br><span class="line">                <span class="keyword">if</span> (instacne == <span class="keyword">null</span>)&#123;</span><br><span class="line">                    instance == <span class="keyword">new</span> Singleton;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这样创建对象还存在一个问题。对于 new 操，我们认为的应该是：</p>
+<ol>
+<li>分配一块内存 M</li>
+<li>再内存 M 上初始化 Singleton 对象</li>
+<li>将 M 的地址赋值给 instance 变量</li>
+</ol>
+<p>但是实际上可能编译器优化过后的执行顺序就成了 1-3-2。这样导致的问题就是，假设线程 A 执行了 <code>getInstance()</code> 方法，按照 1-3-2 的顺序 new 一个对象。但是在执行完 3 的时候发生了线程切换。这个时候线程 B 也执行了 <code>getInstance()</code> 方法，这样在第一个判断的时候，线程 B 就判断 instance 是部位空的，直接返回了 instance。但是这个时候的 instance 是还有没初始化的，就可能会出现空指针异常。</p>
+<h1 id="Java-内存模型：解决可见性和有序性问题"><a href="#Java-内存模型：解决可见性和有序性问题" class="headerlink" title="Java 内存模型：解决可见性和有序性问题"></a>Java 内存模型：解决可见性和有序性问题</h1><p>上面我们讲到由于 CPU 和内存的速度差异，会导致 <strong>可见性，原子性，有序性</strong> 这三个问题，为了解决这些问题，就引出了 <strong>Java内存模型（JMM：Java memory Model）</strong>。</p>
+<p>解决可见性，有序性的问题最直接的方法就是 <strong>禁用缓存和编译优化</strong>。但是这样就因噎废食了。合理的方案应该是 <strong>按需禁用缓存和编译优化。</strong>可以认为 Java 内存模型规范了 JVM 如何提供按需禁用缓存和编译优化的方法。具体来说这些方法包括 <strong>volatile，synchronize，final 这三个关键字和 Happens-Before 原则。</strong></p>
+<p>其中：第一是锁 ，锁操作是具备happens-before关系的，解锁操作happens-before之后对同一把锁的加锁操作。实际上 ，在解锁的时候，JVM需要强制刷新缓存，使得当前线程所修改的内存对其他线程可见。第二是volatile字 段，volatile字段可以看成是一种不保证原子性的同步但保证可见性的特性，其性能往往是优于锁操作的 。但是，频繁地访问 volatile 字段也会出现因为不断地强制刷新缓存而影响程序的性能的问题。第三是 final 修饰符，final修饰的实例字段则是涉及到新建对象的发布问题。当一个对象包含final修饰的实例字段时 ，其他线程能够看到已经初始化的final实例字段，这是安全的。 </p>
+<p>Happens-Before 的意思 <strong>前面一个操作的结果对后续操作时可见的。</strong>Happens -Before 是具有传递性的。其中的七项原则：</p>
+<ol>
+<li>程序次序规则：在一个线程内，按照程序代码顺序，书写在前面的操作先行发生于书写在后面的操作 。准确地说，应该是控制流顺序而不是程序代码顺序，因为要考虑分支、循环等结构。 </li>
+<li>管程锁定规则：一个unlock操作先行发生于后面对同一个锁的lock操作。这里必须强调的是同一个锁 ，而”后面”是指时间上的先后顺序。 </li>
+<li>volatile变量规则：对一个volatile变量的写操作先行发生于后面对这个变量的读操作，这里的”后面”同 样是指时间上的先后顺序。 </li>
+<li>线程启动规则：Thread对象的start()方法先行发生于此线程的每一个动作</li>
+<li>.线程终止规则：线程中的所有操作都先行发生于对此线程的终止检测，我们可以通过 <code>Thread.join()</code> 方法结束、<code>Thread.isAlive()</code>的返回值等手段检测到线程已经终止执行。 </li>
+<li>线程中断规则：对线程 <code>interrupt()</code>方法的调用先行发生于被中断线程的代码检测到中断事件的发生，可 以通过 <code>Thread.interrupted()</code>方法检测到是否有中断发生。</li>
+<li>对象终结规则：一个对象的初始化完成(构造函数执行结束)先行发生于它的finalize()方法的开始。</li>
+</ol>
+<h1 id="互斥锁：解决原子性问题"><a href="#互斥锁：解决原子性问题" class="headerlink" title="互斥锁：解决原子性问题"></a>互斥锁：解决原子性问题</h1><p>锁是一种通用的技术方案，Java 语言中提供的 synchronize 关键字，就是一种锁的实现。synchronize 关键字可以修饰方法，也可以修饰代码块，基本上的使用都是这个样子的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">    <span class="comment">// 修饰非静态方法</span></span><br><span class="line">    <span class="function">synchronize <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 临界区</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 修饰静态方法</span></span><br><span class="line">    <span class="function">synchronize <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 临界区</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 修饰代码块</span></span><br><span class="line">    Object lock = <span class="keyword">new</span> Object();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">baz</span><span class="params">()</span></span>&#123;</span><br><span class="line">        synchronize (lock) &#123;</span><br><span class="line">            <span class="comment">// 临界区</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Java 中只有修饰代码块的时候，才会显式的锁定一个对象。在修饰静态方法，非静态方法的时候都是隐式的锁定。</p>
+<ul>
+<li>当修饰静态方法的时候，锁定的是当前类的 Class 对象，就相当于 <code>synchronize (Tets.class) static void  bar()</code></li>
+<li>当修饰非静态方法的是，锁定的当前的实例对象 this，就相当于 <code>synchornize (this) void foo()</code></li>
+</ul>
+<p>对于上面的 count++ 的问题，就可以使用互斥锁来解决问题。这样在一个线程操作 count 的时候加锁了，所以另一个线程是不能访问 count 变量的，再结合 <strong>Happens-Before</strong> 原则的管程锁定后原则，这样就不会出现并发的问题了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Visible01</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> count;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> synchronize <span class="keyword">void</span> <span class="title">add10k</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> idx = <span class="number">10000</span>;</span><br><span class="line">        <span class="keyword">while</span> (idx &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            count++;</span><br><span class="line">            idx--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是上面的例子是一个被保护资源对应一个锁的情况，但是实际上<strong>一个锁是可以对应多个保护资源的。但是不能多个锁来保护一个资源。</strong></p>
+<p>当保护多个资源的时候，搜先需要区分这些资源之间是否存在联系。</p>
+<h2 id="保护多个没有关联的资源"><a href="#保护多个没有关联的资源" class="headerlink" title="保护多个没有关联的资源"></a>保护多个没有关联的资源</h2><p>假设一个 Account 类中有两个成员变量，balance 和 password。取款 withdrew 和查看余额 getBalance 会访问balance，修改密码 updatePassword 和 查看密码 getPassword 会访问 password。而 balance 和 password 之家你是没有关系的。我们可以创建一个 blaLock 对象来保护 balance，创建一个 pwdLock 对象来保护 password。不同的资源使用不同的锁保护。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object balLock = <span class="keyword">new</span> Object(); <span class="comment">// 和余额相关的锁</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object pwdLock = <span class="keyword">new</span> Object(); <span class="comment">// 和密码相关的锁</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer balance;</span><br><span class="line">    <span class="keyword">private</span> Integer password;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//取钱操作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">withdrew</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (balLock)&#123;</span><br><span class="line">            balance -= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> balance;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 查看余额操作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getBalance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (balLock)&#123;</span><br><span class="line">            <span class="keyword">return</span> balance;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然我们也可以使用一个锁来保护两个对象，例如我们可以通过对 this 加锁来保证这个实例中的所有资源。但是这样性能会很差，在 balance 被操作的时候，password 也是不可访问的。<strong>用不同的锁对受保护资源进行精细化管理，能够提升性能。这样的锁叫做细粒度锁。</strong></p>
+<h2 id="保护有关联的多个资源"><a href="#保护有关联的多个资源" class="headerlink" title="保护有关联的多个资源"></a>保护有关联的多个资源</h2><p>在对多个资源的保护上这个问题就有点复杂了。例如银行转账业务，账户 A 减少 100 ，账户 B 增加 100 元。这两个账户之间就是有关联的。应该怎么实现这个问题呢</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance;</span><br><span class="line">    </span><br><span class="line">    <span class="function">synchronize <span class="keyword">void</span> <span class="title">transfer</span><span class="params">(Account target,<span class="keyword">int</span> amt)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.balance &gt; amt)&#123;</span><br><span class="line">            <span class="keyword">this</span>.balance -= amt;</span><br><span class="line">            target.balance += amt;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码似乎是可以解决问题的。但是这样确实错误的。原因在于，账户 A 调用方法向账户 B 转账。这个时候获得 A 这个锁，但是这个锁却不能保护 B 的余额。</p>
+<p>下面我们具体分析一下，假设有A、B、C三个账户，余额都是200元，我们用两个线程分别执行两个转账操 作：账户A转给账户 B 100 元，账户B转给账户 C 100 元，最后我们期望的结果应该是账户A的余额是100元，账户 B 的余额是200元，账户C的余额是300元。</p>
+<p>我们假设线程 1 执行账户 A 转账户 B 的操作，线程 2 执行账户 B 转账户 C 的操作。这两个线程分别在两颗 CPU 上 同时执行，那它们是互斥的吗？我们期望是，但实际上并不是。因为线程 1 锁定的是账户 A 的实例 （A.this），而线程 2 锁定的是账户B的实例（B.this），所以这两个线程可以同时进入临界区 transfer()。同 时进入临界区的结果是什么呢？线程 1 和线程 2 都会读到账户B的余额为 200，导致最终账户B的余额可能是 300（线程1后于线程2写B.balance，线程2写的B.balance值被线程1覆盖），可能是100（线程1先于线程2 写B.balance，线程1写的B.balance值被线程2覆盖），就是不可能是200。</p>
+<p>那么怎么解决上面问题呢，<strong>只需要一个能覆盖所有受保护资源的锁就行了。</strong>稍微想一下，似乎 Account.class 类是符合我们的要求的，Account.class 是所有 Account 对象共享的，并且也是唯一的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">transfer</span><span class="params">(Account target,<span class="keyword">int</span> amt)</span></span>&#123;</span><br><span class="line">        synchronize (Account.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.balance &gt; amt)&#123;</span><br><span class="line">            	<span class="keyword">this</span>.balance -= amt;</span><br><span class="line">            	target.balance += amt;</span><br><span class="line">        	&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这样做似乎有回到了上面的问题：这样的做法效率太低。两个账户之间的转账，只需锁住这两个账户，但是却锁住了 class ，导致同一时间只有一笔转账操作可以进行。</p>
+<p>再想想似乎是有更好的解决方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">transfer</span><span class="params">(Account target,<span class="keyword">int</span> amt)</span></span>&#123;</span><br><span class="line">        <span class="comment">//锁定转出账户</span></span><br><span class="line">        synchronize (<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="comment">//锁定转入账户</span></span><br><span class="line">            synchronize (target)&#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.balance &gt; amt)&#123;</span><br><span class="line">            		<span class="keyword">this</span>.balance -= amt;</span><br><span class="line">            		target.balance += amt;</span><br><span class="line">        		&#125; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这看上去似乎很完美，提升了性能。但是却有可能会导致死锁。</p>
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><p>上面转账的代码是怎么发生死锁的呢？我们假设线程 T1 执行账户 A 转账户 B 的操作，账户 A.transfer(账户B)； 同时线程 T2 执行账户 B 转账户A的操作，账户 B.transfer(账户A)。当 T1 和 T2 同时执行完<strong>锁定转出账户</strong>的代码时，T1获 得了账户 A 的锁（对于 T1，this是账户 A），而 T2 获得了账户B的锁（对于 T2，this是账户 B）。之后 T1 和T2 在执行 <strong>锁定转入账户</strong> 的代码时，T1 试图获取账户B的锁时，发现账户B已经被锁定（被T2锁定），所以T1 开始等待； T2 则试图获取账户A的锁时，发现账户 A 已经被锁定（被 T1 锁定），所以 T2 也开始等待。于是 T1和 T2 会无期 限地等待下去，也就是我们所说的死锁了。</p>
+<p>当一下四个条件都满足的时候就会发生死锁：</p>
+<ul>
+<li>互斥 ：共享资源 X 和 Y 同一时间只能被一个线程占有</li>
+<li>占有且等待：当 T1 占有 X 时，等待 Y 的时候，不放弃 X</li>
+<li>持续等待：T1 持续等待 T2 释放 Y，T2 持续等待 T1 释放 X。</li>
+<li>不可抢占：其他线程不能抢占获得 T1 的资源 X</li>
+</ul>
+<p>只有上面的四个条件都成立的时候才会发生死锁，也就是只要破坏上面任意一个条件就可以解决死锁。其中<strong>互斥</strong>这个条件不能被破坏的。而其余三个都是可以破坏的条件。</p>
+<ol>
+<li>占有且等待：在申请资源的时候，一次性申请说有的资源，这样就不存在等待的条件了。</li>
+<li>不可抢占：在占有部分线程进一步申请其他资源的时候，如果申请不成功就放弃已经申请成功的资源。这样就不存在不可抢占。</li>
+<li>持续等待：这个条件可以通过按序申请来解决。假定每个资源是线性有序的，每次申请资源的时候，先锁定小号的资源，再锁定大号的资源。这样就不存在持续等待的问题了。</li>
+</ol>
+<h3 id="解决占有且等待"><a href="#解决占有且等待" class="headerlink" title="解决占有且等待"></a>解决占有且等待</h3><p>在转账业务中只要每次申请时同时申请两个账户，就可以解决这个问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> balance;</span><br><span class="line">    Allocator allocator; <span class="comment">// 应该为单例对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transfer</span><span class="params">(<span class="keyword">int</span> awt, Account target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(!allocator.apply(<span class="keyword">this</span>,target));</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            synchronize (<span class="keyword">this</span>)&#123;</span><br><span class="line">                sychronize(target)&#123;</span><br><span class="line">                    <span class="comment">// 执行转账操作</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            allocator.release(<span class="keyword">this</span>,target);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Allocator</span></span>&#123;</span><br><span class="line">    ArrayList&lt;Account&gt; lock = <span class="keyword">new</span> ArrayList&lt;Account&gt;;</span><br><span class="line">    <span class="comment">//一次申请所有的资源</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronize <span class="keyword">boolean</span> <span class="title">apply</span><span class="params">(Account src, Account target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (lock.contains(src) || lock.contains(target))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            lock.add(src);</span><br><span class="line">            lock.add(target);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronize <span class="keyword">void</span> <span class="title">release</span><span class="params">(Account src,Account target)</span></span>&#123;</span><br><span class="line">        lock.remove(src);</span><br><span class="line">        lock.remove(target);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这样的做法中在申请时使用了 <code>while(!allocator.apply(this,target));</code> 。这样无疑增加了系统的开销。</p>
+<h3 id="解决不可抢占"><a href="#解决不可抢占" class="headerlink" title="解决不可抢占"></a>解决不可抢占</h3><h3 id="解决持续等待"><a href="#解决持续等待" class="headerlink" title="解决持续等待"></a>解决持续等待</h3><p>解决持续等待的方法就是，将共享资源按一定的规则，线性排序，每次从小的资源开始申请。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> balance;</span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transfer</span><span class="params">(<span class="keyword">int</span> awt, Account target)</span></span>&#123;</span><br><span class="line">        Account left = <span class="keyword">this</span>;</span><br><span class="line">        Account right = target;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.id &gt; target.id)&#123;</span><br><span class="line">        	left = target;</span><br><span class="line">            right = <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 先锁定小的    </span></span><br><span class="line">        synchronize (left)&#123;</span><br><span class="line">            <span class="comment">// 再锁定大的</span></span><br><span class="line">            sychronize(right)&#123;</span><br><span class="line">                <span class="comment">// 转账操作</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="通知等待优化占用等待"><a href="#通知等待优化占用等待" class="headerlink" title="通知等待优化占用等待"></a>通知等待优化占用等待</h3><p>但是上面<strong>解决占用且等待的</strong>的方法并不是最优的方法。更为好的方式是使用 <strong>通知等待</strong>。</p>
+<p>Java 中实现通知等待的方式一般使用 <code>wait() notify() notifyAll()</code> 这三个方法。其中 <code>notify()</code> 方法会随机的通知等待队列中的一个线程，而 <code>notifyAll()</code> 方法会通知所有的等待队列中的线程。由于使用 <code>notify()</code> 方法可以会出现永远不能通知到某个线程的情况，所以一般使用 <code>notifyAll()</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer balance;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Account</span> <span class="params">(<span class="keyword">int</span> balance)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.balance = balance;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 转账操作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transfer</span><span class="params">(<span class="keyword">int</span> awt, Account target)</span></span>&#123;</span><br><span class="line">        Allocator.getInstance().lock(<span class="keyword">this</span>,target);</span><br><span class="line">        <span class="keyword">this</span>.balance -= awt;</span><br><span class="line">        target.balance += awt;</span><br><span class="line">        Allocator.getInstance().release(<span class="keyword">this</span>,target);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 测试方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Account src = <span class="keyword">new</span> Account(<span class="number">10000</span>);</span><br><span class="line">        Account target = <span class="keyword">new</span> Account(<span class="number">0</span>);</span><br><span class="line">        CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                src.transfer(<span class="number">1</span>,target);</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch.await();</span><br><span class="line">        System.out.println(<span class="string">"src="</span>+src.balance);</span><br><span class="line">        System.out.println(<span class="string">"target="</span>+target.balance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单例的锁类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Allocator</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Allocator</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Single</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Allocator INSTANCE = <span class="keyword">new</span> Allocator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Allocator <span class="title">getInstance</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> Single.INSTANCE;&#125;</span><br><span class="line"></span><br><span class="line">    List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">(Account src, Account target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (list.contains(src) || list.contains(target))&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">this</span>.wait();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        list.add(src);</span><br><span class="line">        list.add(target);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">release</span><span class="params">(Account src, Account target)</span></span>&#123;</span><br><span class="line">        list.remove(src);</span><br><span class="line">        list.remove(target);</span><br><span class="line">        <span class="keyword">this</span>.notifyAll();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中使用了 <code>CountDownLatch</code> 这个类，这个是用于多个线程同步的。构造函数需要传入一个 int 类型的参数初始化。每次调用 <code>countDown()</code> 方法将其中的计数器减一。调用 <code>await()</code> 方法会一直阻塞当前线程，直到计时器的值为0。</p>
+<p>sleep() 和 wait() 方法都可以让当前线程挂起一段时间，之间有以下差异：</p>
+<ul>
+<li>sleep 方法是 Thread 类中的方法，wait 方法是 Object 类的方法。</li>
+<li>sleep 方法会继续持有当前的锁，wait 方法会放弃当前的锁。</li>
+<li>sleep 必须传入一个参数，指定醒来的时间。wait 方法不传递参数，需要 notify 方法来通知它醒来。</li>
+<li>sleep 方法可以在任何地方使用。wait 方法只能在同步块或者同步方法中使用。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/18/Java垃圾回收/" rel="next" title="Java垃圾回收">
+                <i class="fa fa-chevron-left"></i> Java垃圾回收
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jang</p>
+              <p class="site-description motion-element" itemprop="description">个人的学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#从并发编程bug聊起"><span class="nav-number">1.</span> <span class="nav-text">从并发编程bug聊起</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#源头之一：缓存导致的可见性问题"><span class="nav-number">1.1.</span> <span class="nav-text">源头之一：缓存导致的可见性问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源头之二：进程切换带来的原子性问题"><span class="nav-number">1.2.</span> <span class="nav-text">源头之二：进程切换带来的原子性问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源头之三：编译优化以后带来的有序性问题"><span class="nav-number">1.3.</span> <span class="nav-text">源头之三：编译优化以后带来的有序性问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-内存模型：解决可见性和有序性问题"><span class="nav-number">2.</span> <span class="nav-text">Java 内存模型：解决可见性和有序性问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#互斥锁：解决原子性问题"><span class="nav-number">3.</span> <span class="nav-text">互斥锁：解决原子性问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#保护多个没有关联的资源"><span class="nav-number">3.1.</span> <span class="nav-text">保护多个没有关联的资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保护有关联的多个资源"><span class="nav-number">3.2.</span> <span class="nav-text">保护有关联的多个资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#死锁"><span class="nav-number">3.3.</span> <span class="nav-text">死锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决占有且等待"><span class="nav-number">3.3.1.</span> <span class="nav-text">解决占有且等待</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决不可抢占"><span class="nav-number">3.3.2.</span> <span class="nav-text">解决不可抢占</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决持续等待"><span class="nav-number">3.3.3.</span> <span class="nav-text">解决持续等待</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通知等待优化占用等待"><span class="nav-number">3.3.4.</span> <span class="nav-text">通知等待优化占用等待</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+</html>
